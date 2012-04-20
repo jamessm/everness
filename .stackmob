@@ -1,0 +1,7 @@
+sm_app_name: everness
+sm_client_name: jamesgatenby
+html5: true
+
+development:
+  key: 42955b1b-e18c-41aa-9e3a-1d8590984edd
+  secret: e1e592a4-72f0-44ef-8fb6-38d1569769e6

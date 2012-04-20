@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<!-- StackMob JS SDK Javascript Dependencies -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://static.stackmob.com/js/json2-min.js"></script>
+<script type="text/javascript" src="http://static.stackmob.com/js/underscore-1.3.0-min.js"></script>
+<script type="text/javascript" src="http://static.stackmob.com/js/backbone-0.5.3-min.js"></script>
+<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.1.0.js"></script>
+
+<!-- Initialize the StackMob JS SDK -->
+  <script type="text/javascript">
+    StackMob.init({
+      appName: "everness",
+      clientSubdomain: "jamesgatenby",
+      dev: true
+    });
+  </script>
+
+<!-- Just some CSS styles for prettiness -->
+<link rel="stylesheet" type="text/css" href="styles.css"/>
+
+<!-- Just a little something to help with formatting the display of JSON results -->
+<script type="text/javascript" src="http://static.stackmob.com/resources/js/jsonFormatter-0.1.0-min.js"></script>
+</head>
+<body>
+
+
+
+
+
+<!-- JAVASCRIPT CODE AND STACKMOB JS SDK EXAMPLES BELOW! -->
+<script type="text/javascript">
+  /* No jQuery syntax is being used below so that there's no confusion around what's unique to StackMob's JS SDK syntax*/
+
+  /* This runs when you click on the "Create User" button */
+  function create() {
+  	//Get the username from the form field
+    var username = document.getElementById('username').value;
+
+    //If the username isn't empty
+    if (username != '') {
+
+      //prepare the user as JSON
+	  var player = {
+        'name': 'Dude',
+        'age': 'undead',
+        'chips': 30, //add on any custom fields you like
+        'playertype': 'human'
+      };
+
+
+      /* #########################################
+       * START STACKMOB JS CODE
+       * ######################################### */
+
+      //Create a local instance of your User object.  StackMob gives you a User object out of the box.
+      //Pass your JSON into the User constructor
+
+      var player = new StackMob.User(userjson);
+
+	  //This makes an AJAX call telling StackMob's servers to save this user on the server side
+	  //StackMob will add new columns to your schema if they don't exist yet.  E.g., age, title..
+      //user.create(callbacks());
+      player.create();
+
+      /* #########################################
+       * END STACKMOB JS CODE
+       * ######################################### */
+
+
+    }}
+
+  /* This runs when you click on the "Fetch User" button */
+  function read() {
+  //Get the username from the form field
+    var username = document.getElementById('username').value;
+
+    //if the username isn't empty
+    if (username != '') {
+
+
+
+
+
+
+      /* #########################################
+       * START STACKMOB JS CODE
+       * ######################################### */
+
+      //Call StackMob via Ajax to fetch a user by defining the username you want
+      var fetchuser = new StackMob.User({ 'username': username });
+      fetchuser.fetch(callbacks());
+
+
+      /* #########################################
+       * END STACKMOB JS CODE
+       * ######################################### */
+
+
+
+    }
+
+  }
+
+  /* Create, Fetch, and almost all other StackMob JS SDK methods have callbacks:  success/error.
+     These will run when a response is heard back from the StackMob Servers.
+
+     e.g
+
+     //Example of callbacks
+     var user = new StackMob.User({ username: 'chucknorris' });
+     user.fetch({
+       success: function(model) {
+         //do something when there's a success
+       },
+       error: function(model, response) {
+         //do something when there's an error
+       }
+     });
+
+
+     */
+  function callbacks() {
+
+    var callback = {
+        success: function(model) {
+          console.debug("Received a success from StackMob!");
+          if (model) {
+          	if (model.toJSON) console.debug(model.toJSON());
+          	var jf = new JSONFormatter((model.toJSON ? model.toJSON() : result), 'pre');
+          	$('#results').text(jf.formatJSON());
+          } else $('#results').text('No response body. Check your Firebug/Developer Tools Javascript Console.');
+        },
+        error: function(model, response) {
+          console.debug('There was an error returned by StackMob!');
+          if (response) {
+	        var jf = new JSONFormatter(response, 'pre');
+    	    $('#results').text(jf.formatJSON());
+       	  } else $('#results').text('No response body. Check your Firebug/Developer Tools Javascript Console.');
+        }
+      };
+
+    return callback;
+  }
+
+
+</script>
+
+
+</body>
+</html>
